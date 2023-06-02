@@ -59,8 +59,68 @@ fn binary_search_2(array: &[i32], target: i32) -> Option<usize>{
     }
 }
 
+fn table_search(lexicon: Vec<Vec<char>>, target_word: Vec<char>) -> bool{
+    let mut left = 0;
+    let mut right = lexicon.len();
+
+    while left < right {
+        let mid = left + (right - left) / 2;
+        let mut index = 0;
+
+        while lexicon[mid][index] == target_word[index] && target_word[index] != '\0'{
+            index += 1;
+        }
+
+        if index < target_word.len() && lexicon[mid][index] < target_word[index] {
+            left = mid + 1;
+        } else {
+            right = mid;
+        }
+    }
+
+    if right < lexicon.len() {
+        let mut index = 0;
+        while lexicon[right][index] == target_word[index] && target_word[index] != '\0'{
+            index += 1;
+        }
+        return index == target_word.len () || target_word[index] == '\0';
+    }
+
+    false
+}
+
+fn table_search_2(lexicon: Vec<Vec<char>>, target_word: Vec<char>) -> bool{
+    let mut left = 0;
+    let mut right = lexicon.len();
+
+    while left < right {
+        let mid = left + (right - left) / 2;
+        let matched_index = lexicon[mid].iter()
+            .zip(&target_word)
+            .take_while(|&(a, b)| a == b && *b != '\0')
+            .count();
+        
+        if matched_index < target_word.len() && lexicon[mid][matched_index] < target_word[matched_index]{
+            left = mid + 1;
+        } else {
+            right = mid;
+        }
+    }
+
+    if right < lexicon.len(){
+        let matched_index = lexicon[right].iter()
+            .zip(&target_word)
+            .take_while(|&(a, b)| a == b && *b != '\0')
+            .count();
+
+        return matched_index == target_word.len() || target_word[matched_index] == '\0';     
+    }
+
+    false
+}
+
 fn main() {
-    // Linear search
+    // Linear search ----------------------------------------------------
     let mut arr = vec![10, 20, 30, 100, 50];
 
     let target = 110;
@@ -75,7 +135,7 @@ fn main() {
         None => println!("Element is not preset in array"),
     }
 
-    // Binary search 1
+    // Binary search ------------------------------------------------------
     let arr = [0,1,2,3,4,6,8,10];
     let x = 9;
     match binary_search_1(&arr, x){
@@ -88,4 +148,21 @@ fn main() {
         Some(index) => println!("Found {} at index {}", x, index),
         None => println!("{} was not found", x),
     }
+    
+
+    // Table search --------------------------------------------------------
+    let lexicon: Vec<Vec<char>> = vec![
+        vec!['a','b','c','\0'],
+        vec!['d','e','f','\0'],
+        vec!['g','h','i','\0']
+    ];
+    let target_word: Vec<char> = vec!['d', 'e', 'f', '\0'];
+
+    let is_match = table_search(lexicon.clone(), target_word.clone());
+    println!("Match found: {}", is_match);
+
+    let is_match = table_search_2(lexicon, target_word);
+    println!("Match found: {}", is_match);
+
+
 }
