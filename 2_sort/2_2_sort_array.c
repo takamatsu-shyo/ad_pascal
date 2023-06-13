@@ -63,6 +63,37 @@ void bubble_sort(int *a, int n){
     }
 }
 
+void shaker_sort(int *a, int n){
+    int j, k, L, R;
+    int x;
+
+    L = 0;
+    R = n - 2;
+    k = R;
+
+    do {
+        for (j = R; j >= L; j--){
+            if (a[j] > a[j+1]){
+                x = a[j];
+                a[j] = a[j+1];
+                a[j+1] = x;
+                k = j;
+            }
+        }
+        L = k + 1;
+
+        for (j = L; j <= R; j++){
+            if (a[j] > a[j+1]){
+                x = a[j];
+                a[j] = a[j+1];
+                a[j+1] = x;
+                k = j;
+            }
+        }
+        R = k - 1;
+    } while (L <= R);
+}
+
 void print_array(int* a, int n){
     printf("After sorting: ");
     for (int i = 0; i < n; i++){
@@ -93,6 +124,10 @@ int main(){
     printf("Bubble sort        / ");
     print_array(array_to_sort4, array_size);
 
+    int array_to_sort5[] = {55, 25, 45, 65, 15, 35};
+    shaker_sort(array_to_sort5, array_size);
+    printf("Shaker sort        / ");
+    print_array(array_to_sort5, array_size);
 
 
     return 0;
