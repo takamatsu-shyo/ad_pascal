@@ -1,7 +1,7 @@
 #include <stdbool.h>
 #include <stdio.h>
+#include <stdlib.h>
 
-/*
 int n = 8;
 int x[8], y[8];
 bool single[8];
@@ -26,8 +26,7 @@ int mwr[8][8] = {
     {3, 5, 7, 2, 4, 1, 8, 6},
     {7, 2, 8, 4, 5, 6, 3, 1}
 };
-*/
-
+/*
 int n = 3;
 int x[3], y[3];
 bool single[3];
@@ -42,16 +41,15 @@ int mwr[3][3] = {
     {0, 2, 1},
     {2, 1, 0}
 };
-
+*/
 
 void write() {
     int m, rm = 0, rw = 0;
-    printf("Matchings:\n");
 
     for (m = 0; m < n; m++) {
-        printf("%4d", x[m]);
-        rm += rmw[m][x[m]];
-        rw += rwm[x[m]][m];
+        printf("%4d", x[m] + 1);
+        rm += rmw[m][x[m]] + 1;
+        rw += rwm[x[m]][m] + 1;
     }
 
     printf("%8d", rm);
@@ -59,7 +57,6 @@ void write() {
 }
 
 bool stable(int m, int w, int r) {
-    printf("stable %d %d %d", m, w, r);
     int i = 0, pw, pm, lim;
 
     bool S = true;
@@ -77,16 +74,13 @@ bool stable(int m, int w, int r) {
         pm = mwr[w][i];
         i++;
         if (pm < m){
-            S = rmw[pw][w] > rmw[pm][x[pm]];
+            S = rmw[pm][w] > rmw[pm][x[pm]];
         }
      }
-
-    printf(" - %d\n", S);
     return S;
 }
 
-void Try(int m){
-    printf("Try %d\n", m);
+void try(int m){
     int w, r;
 
     for (r = 0; r < n; r++) {
@@ -97,7 +91,7 @@ void Try(int m){
             single[w] = false;
 
             if (m < n - 1) {
-                Try(m+1);
+                try(m + 1);
             } else {
                 write();
             }
@@ -107,8 +101,31 @@ void Try(int m){
     }
 }
 
+void subtract_one(int arr[8][8]){
+    for (int i = 0; i < 8; i++) {
+        for (int j = 0; j < 8; j++) {
+            arr[i][j] -= 1;
+        }
+    }
+}
+
+void print_8x8(int arr[8][8]){
+    for (int i = 0; i < 8; i++) {
+        for (int j = 0; j < 8; j++) {
+                printf("%d ", arr[i][j]);
+        }
+        printf("\n");
+    }
+    printf("\n");
+}
+
 void FindStableMarriages(){
     int m, w, r;
+
+    subtract_one(wmr);
+    subtract_one(mwr);
+    print_8x8(wmr);
+    print_8x8(mwr);
 
     for (m = 0; m < n; m++){
         for (r = 0; r < n; r++){
@@ -123,8 +140,10 @@ void FindStableMarriages(){
         }
     }
 
-    Try(0);
-
+    print_8x8(rmw);
+    print_8x8(rwm);
+ 
+    try(0);
 }
 
 int main(){
