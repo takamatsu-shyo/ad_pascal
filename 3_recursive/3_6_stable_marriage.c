@@ -112,6 +112,7 @@ void FindStableMarriages(){
 
     for (m = 0; m < n; m++){
         for (r = 0; r < n; r++){
+
             rmw[m][wmr[m][r]] = r;
         }
     }
